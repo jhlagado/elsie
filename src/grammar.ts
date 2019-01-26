@@ -1,4 +1,4 @@
-import ohm from 'ohm-js';
+import * as ohm from 'ohm-js';
 
 export const grammar = ohm.grammar(`
 LambdaGrammar {
@@ -6,13 +6,13 @@ LambdaGrammar {
   Program
     = (DefDefinition | Expression | Comment)*
 
-  Definition 
+  Definition
     = ident ident* "=" (OpenApplication | Expression) ";"
 
-  DefDefinition 
+  DefDefinition
     = "def" Definition
 
-  Expression = 
+  Expression =
   	Lambda
     | Application
     | IfExpression
@@ -20,13 +20,13 @@ LambdaGrammar {
     | ident
 
   Lambda
-    = "#" ident "." Expression 
+    = "#" ident "." Expression
 
   Application
     = "(" Expression Expression+ ")"
- 
+
   OpenApplication
-    = Expression Expression+ 
+    = Expression Expression+
 
   IfExpression
     = "if" Expression "then" Expression "else" Expression
@@ -38,8 +38,7 @@ LambdaGrammar {
     = "--" any* #"\\n"
 
   ident  (an identifier)
-    = (letter | "_") (alnum | "_")* 
-    
+    = (letter | "_") (alnum | "_")*
+
 
 }`);
-

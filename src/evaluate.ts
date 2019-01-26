@@ -2,20 +2,20 @@ import { grammar } from './grammar';
 import { semantics } from './semantics';
 import {
   Expression,
-  Lambda, 
-  Definition, 
-  Application, 
+  Lambda,
+  Definition,
+  Application,
   Identifier
 } from './elements';
 
-export type EvalExpression = Expression | Closure;
+export type EvalExpression = Expression | Closure | undefined;
 
 class Closure {
-  name: string = null;
+  name?: string;
   lambda: Lambda;
   context: any;
 
-  constructor(lambda, context) {
+  constructor(lambda: Lambda, context: any) {
     this.lambda = lambda;
     this.context = context;
   }
@@ -37,7 +37,7 @@ export function evaluate(expr: Expression, context: any): EvalExpression {
     if (value instanceof Closure)
       value.name = expr.name.value;
     context[expr.name.value] = value;
-    return; //void 
+    return undefined; //void
   }
   else if (expr instanceof Application) {
     const closure = evaluate(expr.funcExpr, context);
@@ -70,7 +70,7 @@ export function evaluate(expr: Expression, context: any): EvalExpression {
   }
 }
 
-export function parseEval(text, context) {
+export function parseEval(text: string, context: {}):EvalExpression {
   const matchResult = grammar.match(text);
   if (matchResult.failed()) {
     console.log(matchResult.message);
@@ -85,5 +85,5 @@ export function parseEval(text, context) {
         console.error(`${text} error:${e}`);
     }
   }
+  return undefined;
 }
-

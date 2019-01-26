@@ -1,5 +1,5 @@
 
-export function stringify(value) {
+export function stringify(value: any) {
   return value == null ?
     'null' :
     typeof value === 'symbol' ?

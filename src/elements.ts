@@ -12,7 +12,7 @@ export class Lambda {
     bodyExpr: Expression,
   ) {
     this.argName = argName;
-    this.bodyExpr = bodyExpr; 
+    this.bodyExpr = bodyExpr;
   }
 
   toString() {
@@ -50,8 +50,8 @@ export class Application {
   }
 
   toString() {
-    return `(${stringify(this.funcExpr)  
-      } ${stringify(this.argExpr)})`; 
+    return `(${stringify(this.funcExpr)
+      } ${stringify(this.argExpr)})`;
   }
 }
 
@@ -59,7 +59,7 @@ export class Definition {
   name: Identifier;
   definition: Expression;
 
-  constructor(name, definition) {
+  constructor(name: Identifier, definition: Expression) {
     this.name = name;
     this.definition = definition;
   }
@@ -68,4 +68,3 @@ export class Definition {
     return `${this.name} = ${this.definition}`
   }
 }
-

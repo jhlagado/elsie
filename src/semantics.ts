@@ -1,19 +1,19 @@
 import { grammar } from './grammar';
-import { Lambda, Definition, Application, Identifier  } from './elements';
+import { Lambda, Definition, Application, Identifier, Expression  } from './elements';
 
-export const semantics = grammar.createSemantics(); 
+export const semantics = grammar.createSemantics();
 semantics.addOperation('parse', {
 
   Application(_1, funcExp, argExp, _2) {
     return argExp.parse().reduce(
-      (acc, arg) => new Application(acc, arg),
+      (acc: Expression, arg: Expression) => new Application(acc, arg),
       funcExp.parse()
     );
   },
 
   OpenApplication(funcExp, argExp) {
     return argExp.parse().reduce(
-      (acc, arg) => new Application(acc, arg),
+      (acc: Expression, arg: Expression) => new Application(acc, arg),
       funcExp.parse()
     );
   },
@@ -26,15 +26,15 @@ semantics.addOperation('parse', {
     const nameValue = nameNode.parse();
     const argsValue = argsNode.parse()
     const defValue = defNode.parse();
-    
+
     const definition = argsValue.reduceRight(
-      (acc, arg) => new Lambda(arg, acc),  
+      (acc: Expression, arg: Identifier) => new Lambda(arg, acc),
       defValue
     )
     return new Definition(nameValue, definition);
   },
 
-  Lambda(_1, funcArgNode, _2, funcExprNode) { 
+  Lambda(_1, funcArgNode, _2, funcExprNode) {
     return new Lambda(funcArgNode.parse(), funcExprNode.parse());
   },
 
@@ -42,7 +42,7 @@ semantics.addOperation('parse', {
     const defList:Definition[] = defListNode.parse();
     const expr = exprNode.parse();
     const expr1 = defList.reduceRight(
-      (acc, def) => new Lambda(def.name, acc),   
+      (acc, def) => new Lambda(def.name, acc),
       expr
     )
     return defList.reduce(
@@ -51,8 +51,7 @@ semantics.addOperation('parse', {
     );
   },
 
-  ident(_1, _2) { 
-    return new Identifier(this.sourceString);   
+  ident(_1, _2) {
+    return new Identifier((this as any).sourceString);
   }
 });
-
