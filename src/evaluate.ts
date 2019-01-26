@@ -27,7 +27,7 @@ class Closure {
 
 export function evaluate(expr: Expression, context: any): EvalExpression {
   if (Array.isArray(expr)) {
-    return expr.reduce((acc, item) => evaluate(item, context), null);
+    return expr.reduce((_acc, item) => evaluate(item, context), null);
   }
   else if (expr instanceof Lambda) {
     return new Closure(expr, context);
