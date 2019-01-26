@@ -1,8 +1,22 @@
 {
   "compilerOptions": {
-
-    /* Basic Options */                       
-    "target": "ESNEXT",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
-  }
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "newLine": "LF",
+    "outDir": "./lib/",
+    "target": "es6",
+    "sourceMap": true,
+    "declaration": true,
+    "jsx": "preserve",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true
+  },
 }
- 
