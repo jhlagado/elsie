@@ -1,7 +1,7 @@
 import { parseEval } from './evaluate';
 import { stringify } from './utils';
 
-import './style.css';
+// import './style.css';
 
 const globalContext = {};
 
