@@ -4,7 +4,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Elsie Jest",
+            "name": "vscode-jest-tests",
             "program": "/usr/local/bin/jest",
             "args": [
                 "${relativeFile}",
