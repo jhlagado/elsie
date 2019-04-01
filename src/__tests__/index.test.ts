@@ -29,7 +29,7 @@ test(`inline lambda selectFirst from makePair`, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`open apply   `, () => {
+test(`open apply`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -43,7 +43,7 @@ test(`open apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`open apply   `, () => {
+test(`open apply`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -57,7 +57,7 @@ test(`open apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`open apply   `, () => {
+test(`open apply`, () => {
     const actual = stringify(parseEval(
         `
         selfApply #x.x
@@ -68,7 +68,7 @@ test(`open apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`open apply   `, () => {
+test(`open apply`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -82,7 +82,7 @@ test(`open apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`or one true   `, () => {
+test(`or one true`, () => {
     const actual = stringify(parseEval(
         `
         (or false true)
@@ -93,7 +93,7 @@ test(`or one true   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`or both false   `, () => {
+test(`or both false`, () => {
     const actual = stringify(parseEval(
         `
         (or false false)
@@ -104,7 +104,7 @@ test(`or both false   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`and one false   `, () => {
+test(`and one false`, () => {
     const actual = stringify(parseEval(
         `
         (and false true)
@@ -115,7 +115,7 @@ test(`and one false   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`and both true   `, () => {
+test(`and both true`, () => {
     const actual = stringify(parseEval(
         `
         (and true true)
@@ -126,7 +126,7 @@ test(`and both true   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`not not expression   `, () => {
+test(`not not expression`, () => {
     const actual = stringify(parseEval(
         `
         (not (not false))
@@ -137,7 +137,7 @@ test(`not not expression   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`identity applied to itself is identity   `, () => {
+test(`identity applied to itself is identity`, () => {
     const actual = stringify(parseEval(
         `
         (#x.x #x.x)
@@ -148,7 +148,7 @@ test(`identity applied to itself is identity   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`curried apply   `, () => {
+test(`curried apply`, () => {
     const actual = stringify(parseEval(
         `
         ((makePair #x.x #y.y) selectSecond)
@@ -159,7 +159,7 @@ test(`curried apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`check let with args   `, () => {
+test(`check let with args`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -173,7 +173,7 @@ test(`check let with args   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`check def with args   `, () => {
+test(`check def with args`, () => {
     const actual = stringify(parseEval(
         `
         def x f = f;
@@ -185,7 +185,7 @@ test(`check def with args   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`check shadow variables   `, () => {
+test(`check shadow variables`, () => {
     const actual = stringify(parseEval(
         `
         (#f.(f #f.f) selfApply)
@@ -196,7 +196,7 @@ test(`check shadow variables   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`make pair and select second   `, () => {
+test(`make pair and select second`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -210,7 +210,7 @@ test(`make pair and select second   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`make pair and select first   `, () => {
+test(`make pair and select first`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -224,7 +224,7 @@ test(`make pair and select first   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`check context   `, () => {
+test(`check context`, () => {
     const actual = stringify(parseEval(
         `identity`,
         context,
@@ -233,7 +233,7 @@ test(`check context   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`let expression   `, () => {
+test(`let expression`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -247,7 +247,7 @@ test(`let expression   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`select first arg   `, () => {
+test(`select first arg`, () => {
     const actual = stringify(parseEval(
         `
         ((#first.#second.first #x.x) #y.y)
@@ -258,7 +258,7 @@ test(`select first arg   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`let expression   `, () => {
+test(`let expression`, () => {
     const actual = stringify(parseEval(
         `
         let
@@ -272,7 +272,7 @@ test(`let expression   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`defining in context   `, () => {
+test(`defining in context`, () => {
     const actual = stringify(parseEval(
         `
         def i x = x;
@@ -284,7 +284,7 @@ test(`defining in context   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`closure apply ident to ident   `, () => {
+test(`closure apply ident to ident`, () => {
     const actual = stringify(parseEval(
         `
         ((#func.#arg.(func arg) #x.x) #x.x)
@@ -295,7 +295,7 @@ test(`closure apply ident to ident   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`closure apply ident to self apply   `, () => {
+test(`closure apply ident to self apply`, () => {
     const actual = stringify(parseEval(
         `((#func.#arg.(func arg) #x.x) #s.(s s))`,
         context,
@@ -304,7 +304,7 @@ test(`closure apply ident to self apply   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`self apply identity to identity   `, () => {
+test(`self apply identity to identity`, () => {
     const actual = stringify(parseEval(
         `(#s.(s s) #x.x)`,
         context,
@@ -313,7 +313,7 @@ test(`self apply identity to identity   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`applying identity to identity returns identity   `, () => {
+test(`applying identity to identity returns identity`, () => {
     const actual = stringify(parseEval(
         `(#x.x #x.x)`,
         context,
@@ -322,7 +322,7 @@ test(`applying identity to identity returns identity   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`lambda evaluates to itself   `, () => {
+test(`lambda evaluates to itself`, () => {
     const actual = stringify(parseEval(
         `#x.x`,
         context,
@@ -331,7 +331,7 @@ test(`lambda evaluates to itself   `, () => {
     expect(actual).toEqual(expected);
 })
 
-test(`empty   `, () => {
+test(`empty`, () => {
     const actual = stringify(parseEval(
         ``,
         context,
