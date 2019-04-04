@@ -25,7 +25,7 @@ class Closure {
   }
 }
 
-export function evaluate(expr: Expression, context: any): EvalExpression {
+export function evaluate(expr: EvalExpression, context: any): EvalExpression {
   if (Array.isArray(expr)) {
     return expr.reduce((_acc, item) => evaluate(item, context), null);
   }
@@ -70,20 +70,16 @@ export function evaluate(expr: Expression, context: any): EvalExpression {
   }
 }
 
-export function parseEval(text: string, context: {}):EvalExpression {
+export function parse(text: string):EvalExpression {
   const matchResult = grammar.match(text);
   if (matchResult.failed()) {
-    console.log(matchResult.message);
+    throw matchResult.message;
   }
-  else {
-    const adapter = semantics(matchResult);
-    const expression = adapter.parse();
-    try {
-      return evaluate(expression, context);
-    }
-    catch (e) {
-        console.error(`${text} error:${e}`);
-    }
-  }
-  return undefined;
+  const adapter = semantics(matchResult);
+  return adapter.parse();
+}
+
+export function parseEval(text: string, context: {}):EvalExpression {
+  const expression = parse(text);
+  return expression && evaluate(expression, context);
 }
