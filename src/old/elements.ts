@@ -1,4 +1,4 @@
-import { stringify } from './utils';
+import { format } from './utils';
 
 export type Expression = Lambda | Identifier | Application;
 export type EvalExpression = Expression | Closure | undefined;
@@ -18,7 +18,7 @@ export class Lambda {
 
   toString() {
     return `#${this.argName}.${
-      stringify(this.bodyExpr)
+      format(this.bodyExpr)
     }`;
   }
 }
@@ -50,8 +50,8 @@ export class Application {
   }
 
   toString() {
-    return `(${stringify(this.funcExpr)
-      } ${stringify(this.argExpr)})`;
+    return `(${format(this.funcExpr)
+      } ${format(this.argExpr)})`;
   }
 }
 

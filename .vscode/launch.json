@@ -3,8 +3,20 @@
     "configurations": [
         {
             "type": "node",
-            "request": "launch",
             "name": "vscode-jest-tests",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+            "args": [
+                "--runInBand"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "vscode-jest-testsx",
             "program": "/usr/local/bin/jest",
             "args": [
                 "${relativeFile}",

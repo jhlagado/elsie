@@ -1,13 +1,17 @@
-import { EvalExpression, Lambda, Closure, Definition, Application, Identifier } from "./elements";
 import { grammar } from "./grammar";
 import { semantics } from "./semantics";
+import {
+  EvalExpression, Lambda, Closure, Definition,
+  Application, Identifier
+} from "./elements";
 
-export function stringify(value: any) {
-  return value == null ?
-    'null' :
-    typeof value === 'symbol' ?
-      (value as any).description :
-      value.toString();
+export function parse(text: string):EvalExpression {
+  const matchResult = grammar.match(text);
+  if (matchResult.failed()) {
+    throw matchResult.message;
+  }
+  const adapter = semantics(matchResult);
+  return adapter.parse();
 }
 
 export function evaluate(expr: EvalExpression, context: any): EvalExpression {
@@ -55,11 +59,11 @@ export function evaluate(expr: EvalExpression, context: any): EvalExpression {
   }
 }
 
-export function parse(text: string):EvalExpression {
-  const matchResult = grammar.match(text);
-  if (matchResult.failed()) {
-    throw matchResult.message;
-  }
-  const adapter = semantics(matchResult);
-  return adapter.parse();
+export function format(value: any) {
+  return value == null ?
+    'null' :
+    typeof value === 'symbol' ?
+      (value as any).description :
+      value.toString();
 }
+
