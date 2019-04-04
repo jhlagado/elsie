@@ -1,5 +1,5 @@
 let
-    test x = iff x (\x -&gt; x) (\y -&gt; y)
+    test x = iff x (\x -> x) (\y -> y)
   in
     test false;
 
@@ -7,11 +7,11 @@ let
 
 [];[1];[1,2]
 
-\x y -&gt; x
+\x y -> x
 
-\x y -&gt; x + y
+\x y -> x + y
 
-\x y -&gt; (x * x) + y
+\x y -> (x * x) + y
 
 def x = 1; x;
 
@@ -30,9 +30,9 @@ x + 1       // comment 2
 
 let x = y in x;
 
-(\ a -&gt; 1) 2
+(\ a -> 1) 2
 
-let x y = \z -&gt; z in a
+let x y = \z -> z in a
 
 def identity x = x;
 
@@ -64,10 +64,10 @@ def iff predicate thenExpr elseExpr =
 
 cond thenExpr elseExpr predicate;
 
-selfApply (\ x -&gt; x)
+selfApply (\ x -> x)
 
 let
-  i = \ x -&gt; x;
+  i = \ x -> x;
   j = identity;
 in (identity j);
 
@@ -91,9 +91,9 @@ x x + 1
 
 (a + 1) : x : y
 
-(makePair (\x -&gt; x) (\y -&gt; y)) selectSecond
+(makePair (\x -> x) (\y -> y)) selectSecond
 
 let
-   i = \x -&gt; x;
-   j = \y -&gt; y;
+   i = \x -> x;
+   j = \y -> y;
 in i j;

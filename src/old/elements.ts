@@ -1,6 +1,7 @@
 import { stringify } from './utils';
 
 export type Expression = Lambda | Identifier | Application;
+export type EvalExpression = Expression | Closure | undefined;
 
 export class Lambda {
 
@@ -33,7 +34,6 @@ export class Identifier {
   toString() {
     return this.value;
   }
-
 }
 
 export class Application {
@@ -68,3 +68,19 @@ export class Definition {
     return `${this.name} = ${this.definition}`
   }
 }
+
+export class Closure {
+  name?: string;
+  lambda: Lambda;
+  context: any;
+
+  constructor(lambda: Lambda, context: any) {
+    this.lambda = lambda;
+    this.context = context;
+  }
+
+  toString() {
+    return `${this.name ? this.name : this.lambda}`
+  }
+}
+
