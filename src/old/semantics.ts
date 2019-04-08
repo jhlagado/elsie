@@ -1,7 +1,7 @@
-import { grammar } from './grammar';
+import { elsieGrammar } from './grammar';
 import { Lambda, Definition, Application, Identifier, Expression  } from './elements';
 
-export const semantics = grammar.createSemantics();
+export const semantics = elsieGrammar.createSemantics();
 semantics.addOperation('parse', {
 
   Application(_1, funcExp, argExp, _2) {

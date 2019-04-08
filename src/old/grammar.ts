@@ -1,7 +1,7 @@
 import * as ohm from 'ohm-js';
 
-export const grammar = ohm.grammar(`
-LambdaGrammar {
+export const elsieGrammar = ohm.grammar(`
+ElsieGrammar {
 
   Program
     = (DefDefinition | Expression | Comment)*

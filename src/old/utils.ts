@@ -1,11 +1,11 @@
-import { grammar } from "./grammar";
 import { semantics } from "./semantics";
 import {
   EvalExpression, Lambda, Closure, Definition,
   Application, Identifier
 } from "./elements";
+import { Grammar } from "ohm-js";
 
-export function parse(text: string):EvalExpression {
+export const parseWith = (grammar:Grammar) => (text: string):EvalExpression => {
   const matchResult = grammar.match(text);
   if (matchResult.failed()) {
     throw matchResult.message;
@@ -14,35 +14,35 @@ export function parse(text: string):EvalExpression {
   return adapter.parse();
 }
 
-export function evaluate(expr: EvalExpression, context: any): EvalExpression {
+export const evaluate = (context: any, expr: EvalExpression): EvalExpression => {
   if (Array.isArray(expr)) {
-    return expr.reduce((_acc, item) => evaluate(item, context), null);
+    return expr.reduce((_acc, item) => evaluate(context, item), null);
   }
   else if (expr instanceof Lambda) {
     return new Closure(expr, context);
   }
   else if (expr instanceof Definition) {
-    const value = evaluate(expr.definition, context);
+    const value = evaluate(context, expr.definition);
     if (value instanceof Closure)
       value.name = expr.name.value;
     context[expr.name.value] = value;
     return undefined; //void
   }
   else if (expr instanceof Application) {
-    const closure = evaluate(expr.funcExpr, context);
+    const closure = evaluate(context, expr.funcExpr);
     if (!(closure instanceof Closure)) {
       throw `expected function in left arg: ${
       expr} received: ${closure}`;
     }
     else {
-      const argValue = evaluate(expr.argExpr, context);
+      const argValue = evaluate(context, expr.argExpr);
       const argName: Identifier = closure.lambda.argName;
       const bodyExpr = closure.lambda.bodyExpr;
       const newContext = {
         ...closure.context,
         [argName.value]: argValue
       };
-      return evaluate(bodyExpr, newContext);
+      return evaluate(newContext, bodyExpr);
     }
   }
   else if (expr instanceof Identifier) {
@@ -66,4 +66,3 @@ export function format(value: any) {
       (value as any).description :
       value.toString();
 }
-

@@ -16,7 +16,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "vscode-jest-testsx",
+            "name": "xxx",
             "program": "/usr/local/bin/jest",
             "args": [
                 "${relativeFile}",

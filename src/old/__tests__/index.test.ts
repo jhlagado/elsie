@@ -1,8 +1,11 @@
-import { format, parse, evaluate } from "../utils";
+import { elsieGrammar } from "../grammar";
+import { format, parseWith, evaluate } from "../utils";
 
 const context = {};
+const parse = parseWith(elsieGrammar);
+const parseEval = (text: string) => evaluate(context, parse(text));
 
-format(evaluate(parse(`
+format(parseEval(`
   def identity x = x;
   def apply func arg = func arg;
   def selfApply s = s s;
@@ -17,323 +20,293 @@ format(evaluate(parse(`
   def or x y = cond true y x;
   def iff predicate thenExpr elseExpr =
     cond thenExpr elseExpr predicate;
-`), context));
+`));
 
 test(`inline lambda selectFirst from makePair`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `(((#first.#second.#f.((f first) second) #x.x) #y.y) #first.#second.first)`),
-        context,
-    ));
+    );
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`open apply`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             test x = iff x #x.x #y.y;
         in
             (test false)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`open apply`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             test x = iff x #x.x #y.y;
         in
             (test true)
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`open apply`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         selfApply #x.x
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`open apply`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             i = #x.x;
             j = identity;
         in (identity j)
-        `),
-        context,
+        `
     ));
     const expected = `identity`;
     expect(actual).toEqual(expected);
 })
 
 test(`or one true`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (or false true)
-        `),
-        context,
+        `
     ));
     const expected = `true`;
     expect(actual).toEqual(expected);
 })
-
 test(`or both false`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (or false false)
-        `),
-        context,
+        `
     ));
     const expected = `false`;
     expect(actual).toEqual(expected);
 })
 
 test(`and one false`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (and false true)
-        `),
-        context,
+        `
     ));
     const expected = `false`;
     expect(actual).toEqual(expected);
 })
-
 test(`and both true`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (and true true)
-        `),
-        context,
+        `
     ));
     const expected = `true`;
     expect(actual).toEqual(expected);
 })
 
 test(`not not expression`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (not (not false))
-        `),
-        context,
+        `
     ));
     const expected = `false`;
     expect(actual).toEqual(expected);
 })
 
 test(`identity applied to itself is identity`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (#x.x #x.x)
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`curried apply`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         ((makePair #x.x #y.y) selectSecond)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`check let with args`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             identity2 = #x.x;
         in
             identity2 #y.y
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`check def with args`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         def x f = f;
         x
-        `),
-        context,
+        `
     ));
     const expected = `x`;
     expect(actual).toEqual(expected);
 })
 
 test(`check shadow variables`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         (#f.(f #f.f) selfApply)
-        `),
-        context,
+        `
     ));
     const expected = `#f.f`;
     expect(actual).toEqual(expected);
 })
 
 test(`make pair and select second`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             pair = (makePair #x.x #y.y);
         in
             (pair selectSecond)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`make pair and select first`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             pair = (makePair #x.x #y.y);
         in
             (pair selectFirst)
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`check context`, () => {
-    const actual = format(evaluate(parse(
-        `identity`),
-        context,
+    const actual = format(parseEval(
+        `identity`
     ));
     const expected = `identity`;
     expect(actual).toEqual(expected);
 })
 
 test(`let expression`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             selectFirst x y = x;
         in
             (selectFirst #y.y #x.x)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`select first arg`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         ((#first.#second.first #x.x) #y.y)
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`let expression`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         let
             i = #x.x;
             j = #y.y;
         in (i j)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`defining in context`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         def i x = x;
         (i #y.y)
-        `),
-        context,
+        `
     ));
     const expected = `#y.y`;
     expect(actual).toEqual(expected);
 })
 
 test(`closure apply ident to ident`, () => {
-    const actual = format(evaluate(parse(
+    const actual = format(parseEval(
         `
         ((#func.#arg.(func arg) #x.x) #x.x)
-        `),
-        context,
+        `
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`closure apply ident to self apply`, () => {
-    const actual = format(evaluate(parse(
-        `((#func.#arg.(func arg) #x.x) #s.(s s))`),
-        context,
+    const actual = format(parseEval(
+        `((#func.#arg.(func arg) #x.x) #s.(s s))`
     ));
     const expected = `#s.(s s)`;
     expect(actual).toEqual(expected);
 })
 
 test(`self apply identity to identity`, () => {
-    const actual = format(evaluate(parse(
-        `(#s.(s s) #x.x)`),
-        context,
+    const actual = format(parseEval(
+        `(#s.(s s) #x.x)`
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`applying identity to identity returns identity`, () => {
-    const actual = format(evaluate(parse(
-        `(#x.x #x.x)`),
-        context,
+    const actual = format(parseEval(
+        `(#x.x #x.x)`
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`lambda evaluates to itself`, () => {
-    const actual = format(evaluate(parse(
-        `#x.x`),
-        context,
+    const actual = format(parseEval(
+        `#x.x`
     ));
     const expected = `#x.x`;
     expect(actual).toEqual(expected);
 })
 
 test(`empty`, () => {
-    const actual = format(evaluate(parse(
-        ``),
-        context,
+    const actual = format(parseEval(
+        ``
     ));
     const expected = `null`;
     expect(actual).toEqual(expected);
