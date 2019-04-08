@@ -1,17 +1,17 @@
-            e                           s               H                           =>      e                       s               H
+            expr                    stack           Heap                        =>  expr                    stack           Heap
 ==========================================================================================================================================================
-LET         let(x,obj,e)                s               H                                   e[x'/x]                 s               H[x' -> obj]
-CASECON     case(v,C x1 ... xn, e)      s               H[v -> CON(C a1 ... an)]            e[a1/x1]                s               H
-CASEANY     case(v,x,e)                 s               H                                   e[v/x]                  s               H
-CASE        case(e)                     s               H                                   e                       RET:s           H
-UPDATE      e                           RET:s           H                                   CASECON | CASEANY       s               H
-THUNK       x                           s               H[x -> THUNK e]                     e                       Upd x .:s       H[x -> BLACKHOLE]
-UPDATE      y                           Upd x .:s       H                                   y                       s               H[x -> H[y]]
-KNOWNCALL   fn,a1...an)                 s               H[f -> FUN(x1...xn,e)]              e[a1/x1...an/xn]        s               H
-PRIMOP      +,a1...an)                  s               H                                   a1                      s               H
-EXACT       f.,a1...an)                 s               H[f -> FUN(x1..xn,e)]               e[a1/x1...an/xn]        s               H
-CALLK       (fk,a1...am)                s               H[f -> FUN(x1..xn,e)]               e[a1/x1...an/xn]        (. an+1...am):s H
-PAP2        (fk,a1...am)                s               H[f -> FUN(x1..xn,e)]               p                       s               H[p -> PAP(f a1...am)]
-TCALL       (f.,a1...am)                s               H[f -> THUNK e]                     fn                      (. a1...am)     H
-PCALL       (fk,an+1...am)              s               H[p -> PAP(g a1...an)]              g. a1...an an+1...am    s               H
-RETFUN      f                           (. a1...an):s   H                                   f. a1...an              s               H[f -> FUN | PAP]
+LET         let(x,obj,e)            s               H                               e[x'/x]                 s               H[x' -> obj]
+CASECON     case(v,C x1 ... xn, e)  s               H[v -> CON(C a1 ... an)]        e[a1/x1]                s               H
+CASEANY     case(v,x,e)             s               H                               e[v/x]                  s               H
+CASE        case(e)                 s               H                               e                       RET:s           H
+UPDATE      e                       RET:s           H                               CASECON | CASEANY       s               H
+THUNK       x                       s               H[x -> THUNK e]                 e                       Upd x .:s       H[x -> BLACKHOLE]
+UPDATE      y                       Upd x .:s       H                               y                       s               H[x -> H[y]]
+KNOWNCALL   fn a1...an              s               H[f -> FUN(x1...xn,e)]          e[a1/x1...an/xn]        s               H
+PRIMOP      +  a1...an              s               H                               a1                      s               H
+EXACT       f. a1...an              s               H[f -> FUN(x1..xn,e)]           e[a1/x1...an/xn]        s               H
+CALLK       fk a1...am              s               H[f -> FUN(x1..xn,e)]           e[a1/x1...an/xn]        (. an+1...am):s H
+PAP2        fk a1...am              s               H[f -> FUN(x1..xn,e)]           p                       s               H[p -> PAP(f a1...am)]
+TCALL       f. a1...am              s               H[f -> THUNK e]                 f                       (. a1...am)     H
+PCALL       fk an+1...am            s               H[p -> PAP(g a1...an)]          g. a1...an an+1...am    s               H
+RETFUN      f                       (. a1...an):s   H                               f. a1...an              s               H
