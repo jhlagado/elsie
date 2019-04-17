@@ -1,4 +1,4 @@
-            expr                        stack           Heap                 =>     expr                        stack           Heap
+            expr                        stack           Heap                    =>  expr                        stack           Heap
 ===============================================================================================================================================
 LET         let(x,obj,e)                s               H                           e[x'/x]                     s               H[x' -> obj]
 CASECON     case(v) of C x1 ... xn,e    s               H[v -> CON(C a1 ... an)]    e[a1/x1]                    s               H
