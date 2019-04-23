@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+      "baseUrl": ".",
+      "paths": { "*": ["types/*"] },
     "module": "commonjs",
     "moduleResolution": "node",
     "newLine": "LF",
@@ -13,10 +15,11 @@
       "dom"
     ],
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    // "noImplicitReturns": true,
     "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": true
   },
 }
