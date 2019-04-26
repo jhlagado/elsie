@@ -23,5 +23,5 @@
 // Funtion arity   k ::= (.)                               Unknown arity
 //                     | n                                 Known arity n > 1
 
-const BLACKHOLE: symbol = Symbol('BLACKHOLE');
-const Nil: symbol = Symbol('Nil');
+// const BLACKHOLE: symbol = Symbol('BLACKHOLE');
+// const Nil: symbol = Symbol('Nil');

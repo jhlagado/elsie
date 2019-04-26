@@ -1,8 +1,11 @@
+import { matchPattern } from "./match";
+import { Tuple } from "./types";
+import { rules } from "./rules";
 
 //             expr                       stack           Heap                    =>  expr                        stack           Heap
 // ===============================================================================================================================================
 // LET         let(x,obj,e)               s               H                           e[x'/x]                     s               H[x' -> obj]
-// CASECON     case(v) of C x1 ... xn,e   s               H[v -> CON(C a1 ... an)]    e[a1/x1]                    s               H
+// CASECON     case(v) of C x1 ... xn,e   s               H[v -> CON(C a1 ... an)]    e[a1/x1...a/ax]                    s               H
 // CASEANY     case(v) of x,e             s               H                           e[v/x]                      s               H
 // CASE        case(e)                    s               H                           e                           case(.):s       H
 // RET         ident v                    case(.):s       H                           case(v) CASECON CASEANY     s               H
@@ -17,103 +20,9 @@
 // PCALL       fk an+1...am               s               H[p -> PAP(g a1...an)]      g. a1...an an+1...am        s               H
 // RETFUN      ident f                    (. a1...an):s   H                           f. a1...an                  s               H
 
-interface State {
-    expression: Tuple;
-    stack: StackObject[];
-    heap: HeapObject[];
-    globals: { [key: string]: number };
-}
-
-const alloc = (state: State, object: HeapObject): number => {
-    const ptr = state.heap.length - 1;
-    state.heap[ptr] = object;
-    return ptr;
-}
-
-type StackObject = any;
-type HeapObject = any;
-
-//type Dict = { [key: string]: any }
-
-type StateUpdate = (state: State) => State;
-
-type Tuple = [string, ...any[]];
-type Pattern = ['Pattern', any, any, any];
-type Rule = ['Rule', Pattern, StateUpdate];
-// type Apply = ['Apply', Dict, Expr];
-// type Ident = ['Ident', string];
-// type Let = ['Let', string, HeapObject, string];
-// type Expr = Ident | Let;
-
-function isString(obj: any): obj is string {
-    return Object.prototype.toString.call(obj) === "[object String]"
-}
-
-function isTuple(obj: any): obj is Tuple {
-    return obj.length > 0 && isString(obj[0]);
-}
-
-const t: Rule[] = [
-    ['Rule',
-        ['Pattern',
-            ['Let',
-                ['Ident',
-                    'x'
-                ],
-                'obj',
-                'e'
-            ],
-            'stack',
-            'heap'
-        ],
-        (state: State): State => {
-            const { expression } = state;
-            const [_, ident, obj, expr] = expression;
-            const id = alloc(state, obj);
-            state.expression = ['Apply', { [ident]: id }, expr];
-            return state;
-        },
-    ],
-    ['Rule',
-        ['Pattern',
-            ['Ident', 'v'],
-            'stack',
-            'heap'
-        ],
-        (state: State): State => {
-            const { expression } = state;
-            const [_, ident, obj, expr] = expression;
-            const id = alloc(state, obj);
-            state.expression = ['Apply', { [ident]: id }, expr];
-            return state;
-        }
-    ],
-];
-
-const matchPattern = (expression: Tuple, pattern: Pattern) => {
-    if (isTuple(expression)) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        matchTuple(expression, pattern)
-    }
-
-    if (expression.length === pattern.length) {
-        expression
-    }
-    return false;
-}
-
-const matchTuple = (tuple1: Tuple, tuple2: Tuple) => {
-    if (tuple1.length !== tuple2.length) return false;
-    return tuple1.every((item1, index) => {
-        return index === 0 ?
-            item1 === tuple2[index] :
-            matchPattern(item1, tuple2[index]);
-    })
-}
-
-const _matchTransition = (state: State) => {
-    for (const rule of t) {
-        if (matchTuple(state.expression, rule[1])) {
+export const matchRule = (tuple: Tuple) => {
+    for (const rule of rules) {
+        if (matchPattern(tuple, rule[1][1])) {
             return rule;
         }
     }
