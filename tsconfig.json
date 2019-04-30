@@ -11,15 +11,24 @@
     "declaration": true,
     "jsx": "preserve",
     "lib": [
+      "es6",
+      "es7",
       "es2017",
-      "dom"
-    ],
+      "es2018",
+      "dom",
+      "esnext",
+      "esnext.asynciterable"
+  ],
     "strict": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noImplicitReturns": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
-    // "allowJs": true
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
 }
