@@ -17,11 +17,13 @@ export interface State extends SaveState {
     closure: Closure; // current entered closure
 }
 
+const emptyClosure = {
+    arity: 0,
+    code: () => null,
+}
+
 export const state: State = {
-    closure: {
-        arity: 0,
-        code: () => null,
-    },
+    closure: emptyClosure,
     args: [],
     RCons: 0,
     RVal: null,
