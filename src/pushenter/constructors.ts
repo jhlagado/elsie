@@ -16,38 +16,54 @@ export const Nil: Closure = {
 
 export const Cons: Closure = {
     arity: 2,
-    code:  () => {
+    code: () => {
         state.RCons = ConsTag;
         return null;
     }
 }
 
-export const Num = (value: number): Closure => ({
-    arity: 0,
-    code: () => {
-        state.RVal = value;
-        state.args = [];
-        return null;
-    },
-    toString() {
-        return `${value}`;
-    }
-});
+export const Num = (value: number): Closure => {
+    return ({
+        arity: 0,
+        value: value,
+        code: () => {
+            const { env: { value } } = state;
+            state.currentValue = value;
+            state.args = [];
+            return null;
+        },
+        toString() {
+            return `${value}`;
+        }
+    })
+};
 
-export const Str = (value: string): Closure => ({
-    arity: 0,
-    code: (): Continuation => {
-        if (value.length === 0) {
-            return enter(Nil, [], apply);
-        } else {
-            const [head, tail] = value;
-            return enter(Cons, [
+export const Str = (chars: any[] = []): Closure => {
+    let value: any;
+    if (chars.length === 0) {
+        value = {
+            code: Nil,
+            args: [],
+        };
+    } else {
+        const [head, ...tail] = chars;
+        value = {
+            code: Cons,
+            args: [
                 Num(charCode(head)),
                 Str(tail),
-            ], apply);
+            ],
         }
-    },
-    toString() {
-        return `${value}`;
     }
-});
+    return ({
+        arity: 0,
+        value,
+        code: (): Continuation => {
+            const { code, args } = state.env.value;
+            return enter(code, args, apply);
+        },
+        toString() {
+            return `${chars.join()}`;
+        }
+    })
+};

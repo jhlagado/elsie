@@ -1,6 +1,6 @@
 import { Closure, Continuation } from "./types";
 import { apply } from "./continuations";
-import { state } from "./state";
+import { state, pushState, popState } from "./state";
 
 export const run = (destination: Continuation): void => {
     let dest: Continuation | null = destination;
@@ -13,7 +13,7 @@ export const enter = (
     args: any[],
     continuation: Continuation = apply
 ): Continuation => {
-    state.closure = closure;
+    state.env = closure;
     state.args = args;
     return continuation;
 }
@@ -21,3 +21,12 @@ export const enter = (
 export const charCode = (str: string): number => str.charCodeAt(0);
 
 export const char = (num: number): string => String.fromCharCode(num);
+
+export const checkValue = (closure: Closure, args: any[] = []) => {
+    pushState();
+    run(enter(closure, args, apply));
+    const value = state.currentValue;
+    popState();
+    return value;
+}
+

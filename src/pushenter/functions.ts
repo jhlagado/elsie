@@ -1,13 +1,7 @@
 import { Closure } from './types';
 import { run, enter } from './utils';
 import { apply, update } from './continuations';
-
-import {
-    ConsTag,
-    Cons,
-    Nil,
-    Num,
-} from './constructors';
+import { ConsTag, Cons, Nil, Num, } from './constructors';
 import { state } from './state';
 
 /*
@@ -15,13 +9,14 @@ import { state } from './state';
 */
 export const add: Closure = {
     arity: 2,
+    value: null,
     code: () => {
         const [a, b] = state.args;
         run(enter(a, [], apply));
-        const aNum = state.RVal;
+        const aNum = state.currentValue;
         run(enter(b, [], apply));
-        const bNum = state.RVal;
-        state.RVal = aNum + bNum;
+        const bNum = state.currentValue;
+        state.currentValue = aNum + bNum;
         state.args = [];
         return null;
     }
@@ -34,6 +29,7 @@ export const add: Closure = {
 */
 export const compose: Closure = {
     arity: 2,
+    value: null,
     code: () => {
         const [f, g, x] = state.args;
         const gx = {
@@ -56,6 +52,7 @@ export const compose: Closure = {
 */
 export const map: Closure = {
     arity: 2,
+    value: null,
     code: () => {
         const [f, xs] = state.args;
         run(enter(xs, [], xs.code));
@@ -80,5 +77,6 @@ export const map: Closure = {
 
 export const inc3: Closure = {
     arity: 0,
+    value: null,
     code: () => enter(add, [Num(3)], apply),
 }

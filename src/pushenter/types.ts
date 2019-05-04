@@ -1,14 +1,15 @@
 export type Continuation = (() => (Continuation | null));
 
 export interface Closure {
+    value?: any;
     arity: number;
     code: Continuation;
-    toString: () => string;
+    toString: () => string; //defaults to prototype method
 };
 
 export interface State {
-    closure: Closure; // current entered closure
+    env: Closure; // current entered closure
     args: any[]; // arguments
     RCons: number; // constructor tag
-    RVal: any; // Some returned value
+    currentValue: any; // Some returned value
 }

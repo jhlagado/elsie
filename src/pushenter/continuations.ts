@@ -4,7 +4,7 @@ import { state } from "./state";
 
 export const apply = (): Continuation | null => {
 
-    const { closure, args } = state;
+    const { env: closure, args } = state;
     const nargs = args.length;
 
     if (closure === null)
@@ -21,13 +21,14 @@ export const apply = (): Continuation | null => {
         state.args = [];
         const pap = {
             arity: closure.arity - nargs,
+            v: null,
             code: () => {
                 state.args = [...suppliedArgs, ...state.args];
-                state.closure = closure;
+                state.env = closure;
                 return apply;
             }
         }
-        state.closure = pap;
+        state.env = pap;
         return null;
     }
     else { // f.arity < nargs
@@ -40,11 +41,11 @@ export const apply = (): Continuation | null => {
 }
 
 export const update = (realcode: Continuation): Continuation | null => {
-    const { closure } = state;
+    const { env: closure } = state;
     run(realcode);
     const saveState = {
         RCons: state.RCons,
-        RVal: state.RVal,
+        RVal: state.currentValue,
         args: state.args,
     };
     closure.code = () => {
