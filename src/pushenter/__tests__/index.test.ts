@@ -10,13 +10,13 @@ describe(`run numbers`, () => {
 
         initialise();
 
-        run(enter(Num(123), [], apply));
+        run(state, enter(Num(123), [], apply));
         expect(state.currentValue).toBe(123);
 
-        run(enter(add, [Num(7), Num(6)], apply));
+        run(state, enter(add, [Num(7), Num(6)], apply));
         expect(state.currentValue).toBe(13);
 
-        run(enter(inc3, [Num(21)], apply));
+        run(state, enter(inc3, [Num(21)], apply));
         expect(state.currentValue).toBe(24);
 
     })
@@ -24,13 +24,13 @@ describe(`run numbers`, () => {
     it(`should build a string`, () => {
 
         initialise();
-        run(enter(Str([...'abc']), [], apply));
+        run(state, enter(Str([...'abc']), [], apply));
         expect(checkValue(state.args[0])).toBe(charCode('a'));
 
-        run(enter(state.args[1], [], apply));
+        run(state, enter(state.args[1], [], apply));
         expect(checkValue(state.args[0])).toBe(charCode('b'));
 
-        run(enter(state.args[1], [], apply));
+        run(state, enter(state.args[1], [], apply));
         expect(checkValue(state.args[0])).toBe(charCode('c'));
     })
 

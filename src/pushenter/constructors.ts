@@ -1,14 +1,13 @@
-import { Closure, Continuation } from './types';
+import { Closure, Continuation, State } from './types';
 import { enter, charCode } from './utils';
 import { apply } from './continuations';
-import { state } from './state';
 
 export const NilTag = 2;
 export const ConsTag = 3;
 
 export const Nil: Closure = {
     arity: 0,
-    code: () => {
+    code: (state: State) => {
         state.RCons = NilTag;
         return null;
     }
@@ -16,7 +15,7 @@ export const Nil: Closure = {
 
 export const Cons: Closure = {
     arity: 2,
-    code: () => {
+    code: (state: State) => {
         state.RCons = ConsTag;
         return null;
     }
@@ -26,44 +25,40 @@ export const Num = (value: number): Closure => {
     return ({
         arity: 0,
         value: value,
-        code: () => {
+        code: (state: State) => {
             const { env: { value } } = state;
             state.currentValue = value;
             state.args = [];
             return null;
         },
-        toString() {
-            return `${value}`;
-        }
     })
 };
 
-export const Str = (chars: any[] = []): Closure => {
+export const List = (items: any[] = []): Closure => {
     let value: any;
-    if (chars.length === 0) {
+    if (items.length === 0) {
         value = {
             code: Nil,
             args: [],
         };
     } else {
-        const [head, ...tail] = chars;
+        const [head, ...tail] = items;
         value = {
             code: Cons,
             args: [
                 Num(charCode(head)),
-                Str(tail),
+                List(tail),
             ],
         }
     }
     return ({
         arity: 0,
         value,
-        code: (): Continuation => {
+        code: (state: State): Continuation | null=> {
             const { code, args } = state.env.value;
             return enter(code, args, apply);
         },
-        toString() {
-            return `${chars.join()}`;
-        }
     })
 };
+
+export const Str = (chars: any[] = []): Closure => List(chars);

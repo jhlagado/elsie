@@ -3,7 +3,7 @@ import { State, Closure } from "./types";
 export const emptyClosure: Closure = {
     arity: 0,
     value: null,
-    code: () => null,
+    code: (_state: State) => null,
 }
 
 export const initialState: State = {

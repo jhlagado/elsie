@@ -2,7 +2,7 @@ import { Closure } from './types';
 import { run, enter } from './utils';
 import { apply, update } from './continuations';
 import { ConsTag, Cons, Nil, Num, } from './constructors';
-import { state } from './state';
+import { State } from './types';
 
 /*
     add = \a b -> case a of {a -> case b of {b -> primOp + a b}}
@@ -10,11 +10,11 @@ import { state } from './state';
 export const add: Closure = {
     arity: 2,
     value: null,
-    code: () => {
+    code: (state: State) => {
         const [a, b] = state.args;
-        run(enter(a, [], apply));
+        run(state, enter(a, [], apply));
         const aNum = state.currentValue;
-        run(enter(b, [], apply));
+        run(state, enter(b, [], apply));
         const bNum = state.currentValue;
         state.currentValue = aNum + bNum;
         state.args = [];
@@ -30,7 +30,7 @@ export const add: Closure = {
 export const compose: Closure = {
     arity: 2,
     value: null,
-    code: () => {
+    code: (state: State) => {
         const [f, g, x] = state.args;
         const gx = {
             arity: 0,
@@ -53,9 +53,9 @@ export const compose: Closure = {
 export const map: Closure = {
     arity: 2,
     value: null,
-    code: () => {
+    code: (state: State) => {
         const [f, xs] = state.args;
-        run(enter(xs, [], xs.code));
+        run(state, enter(xs, [], xs.code));
         switch (state.RCons) {
             case ConsTag:
                 const [x, xs] = state.args;
@@ -78,5 +78,5 @@ export const map: Closure = {
 export const inc3: Closure = {
     arity: 0,
     value: null,
-    code: () => enter(add, [Num(3)], apply),
+    code: (_state: State) => enter(add, [Num(3)], apply),
 }

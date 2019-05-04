@@ -1,4 +1,4 @@
-export type Continuation = (() => (Continuation | null));
+export type Continuation = ((state: State) => (Continuation | null));
 
 export interface Closure {
     value?: any;

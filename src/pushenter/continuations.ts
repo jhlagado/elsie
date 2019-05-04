@@ -1,8 +1,8 @@
-import { Continuation } from "./types";
+import { Continuation, State } from "./types";
 import { run } from "./utils";
 import { state } from "./state";
 
-export const apply = (): Continuation | null => {
+export const apply = (state: State): Continuation | null => {
 
     const { env: closure, args } = state;
     const nargs = args.length;
@@ -22,7 +22,7 @@ export const apply = (): Continuation | null => {
         const pap = {
             arity: closure.arity - nargs,
             v: null,
-            code: () => {
+            code: (state: State) => {
                 state.args = [...suppliedArgs, ...state.args];
                 state.env = closure;
                 return apply;
@@ -34,7 +34,7 @@ export const apply = (): Continuation | null => {
     else { // f.arity < nargs
         const remainingArgs = args.slice(closure.arity, nargs);
         state.args.length = closure.arity;
-        run(closure.code)
+        run(state, closure.code)
         state.args = remainingArgs;
         return apply;
     }
@@ -42,7 +42,7 @@ export const apply = (): Continuation | null => {
 
 export const update = (realcode: Continuation): Continuation | null => {
     const { env: closure } = state;
-    run(realcode);
+    run(state, realcode);
     const saveState = {
         RCons: state.RCons,
         RVal: state.currentValue,
