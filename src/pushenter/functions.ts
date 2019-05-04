@@ -12,9 +12,9 @@ export const add: Closure = {
     value: null,
     code: (state: State) => {
         const [a, b] = state.args;
-        run(state, enter(a, [], apply));
+        run(state, enter(state, a, [], apply));
         const aNum = state.currentValue;
-        run(state, enter(b, [], apply));
+        run(state, enter(state, b, [], apply));
         const bNum = state.currentValue;
         state.currentValue = aNum + bNum;
         state.args = [];
@@ -34,9 +34,9 @@ export const compose: Closure = {
         const [f, g, x] = state.args;
         const gx = {
             arity: 0,
-            code: update(() => enter(g, [x], apply)),
+            code: update(state, (state: State) => enter(state, g, [x], apply)),
         }
-        return enter(f, [gx], apply);
+        return enter(state, f, [gx], apply);
     }
 }
 
@@ -55,22 +55,22 @@ export const map: Closure = {
     value: null,
     code: (state: State) => {
         const [f, xs] = state.args;
-        run(state, enter(xs, [], xs.code));
+        run(state, enter(state, xs, [], xs.code));
         switch (state.RCons) {
             case ConsTag:
                 const [x, xs] = state.args;
                 const fx = {
                     arity: 0,
-                    code: update(() => enter(f, [x], apply)),
+                    code: update(state, (_state) => enter(state, f, [x], apply)),
                 }
                 const mapfxs = {
                     arity: 0,
-                    code: update(() => enter(map, [f, xs], apply)),
+                    code: update(state, (_state) => enter(state, map, [f, xs], apply)),
                 }
-                return enter(Cons, [fx, mapfxs], apply);
+                return enter(state, Cons, [fx, mapfxs], apply);
 
             default: //NilTag:
-                return enter(Nil, [], Nil.code);
+                return enter(state, Nil, [], Nil.code);
         }
     }
 }
@@ -78,5 +78,5 @@ export const map: Closure = {
 export const inc3: Closure = {
     arity: 0,
     value: null,
-    code: (_state: State) => enter(add, [Num(3)], apply),
+    code: (state: State) => enter(state, add, [Num(3)], apply),
 }

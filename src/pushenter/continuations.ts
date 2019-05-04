@@ -1,6 +1,5 @@
-import { Continuation, State } from "./types";
-import { run } from "./utils";
-import { state } from "./state";
+import { Continuation, State } from './types';
+import { run } from './utils';
 
 export const apply = (state: State): Continuation | null => {
 
@@ -40,7 +39,7 @@ export const apply = (state: State): Continuation | null => {
     }
 }
 
-export const update = (realcode: Continuation): Continuation | null => {
+export const update = (state: State, realcode: Continuation): Continuation | null => {
     const { env: closure } = state;
     run(state, realcode);
     const saveState = {

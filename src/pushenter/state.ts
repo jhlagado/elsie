@@ -1,4 +1,4 @@
-import { State, Closure } from "./types";
+import { State, Closure } from './types';
 
 export const emptyClosure: Closure = {
     arity: 0,
@@ -17,6 +17,3 @@ export const state: State = initialState;
 
 export const initialise = () => Object.assign(state, initialState);
 
-const stateStack: State[] = [];
-export const pushState = () => stateStack.push({ ...state });
-export const popState = () => { Object.assign(state, stateStack.pop()) };

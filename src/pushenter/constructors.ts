@@ -56,7 +56,7 @@ export const List = (items: any[] = []): Closure => {
         value,
         code: (state: State): Continuation | null=> {
             const { code, args } = state.env.value;
-            return enter(code, args, apply);
+            return enter(state, code, args, apply);
         },
     })
 };
